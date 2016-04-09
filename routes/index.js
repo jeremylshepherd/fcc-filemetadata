@@ -1,51 +1,65 @@
 var express = require('express');
 var router = express.Router();
+var mongoose = require('mongoose');
+var Url = require('../models/urls.js');
 
-function softwareData(str){
-    var data = str.split(' ');
-    var arr = [];
+mongoose.connect('mongodb://localhost/urlapp', function(err, db) {
+  if(err) {console.log(err);}
 
-    for(var i = 0; i < data.length; i++){
-        if(data[i][0] === '(' && arr.length < 2){
-            arr.push(i);
-        }else if(data[i][data[i].length - 1] === ')' && arr.length < 2){
-            arr.push(i + 1);
-        }
+  console.log('Connected to urlapp');
+});
+
+function testUrl(url) {
+    var urlRE2 = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+    if(!urlRE2.test(url)){
+        return false;
     }
-
-    var jData = data.slice(arr[0], arr[1]).join(' ');
-    jData = jData.split('');
-    jData.pop();
-    jData.shift();
-    jData = jData.join('');
-
-    return jData;
+    return true;
 }
 
 router.get('/', function(req, res) {
   res.render('index.ejs');
 });
 
-router.get('/api/whoami', function(req, res, next) {
-  var language = req.headers['accept-language'];
-  var software = softwareData(req.headers['user-agent']);
-  var ipaddress = req.ip;
-  var accept = language.split(',');
-  accept = accept[0];
-  var obj = {};
-  obj.ipaddress = ipaddress;
-  obj.language = accept;
-  obj.software = software;
-  //var obj = req.headers;
-  res.json(obj);
+router.get('/api/new/:url*', function(req, res) {
+  var url = req.url.slice(9)
+  if(!testUrl(url)){
+    res.render('invalidurl.ejs');
+  }else{
+
+    Url.find({}, function(err, urls) {
+      if (err) throw err;
+      var obj = {};
+      obj.original_url = url;
+      obj.short_url = urls.length + 1;
+      var newUrl = new Url(obj);
+      newUrl.save(function(err, newUrl) {
+        if(err){
+          console.log(err);
+        }else{
+          console.log('Your record has saved.');
+        }
+      });
+      res.json(obj);
+    });
+  }
 });
 
-router.get('/api/ip', function(req, res, next) {
-  var ipaddress = req.ip;
-  var obj = {};
-  obj.ipaddress = ipaddress;
-  obj.ips = req.ips;
-  res.json(obj);
+router.get('/api/results', function(req, res, next) {
+  Url.find({}, function(err, urls) {
+    if (err) throw err;
+
+    // object of all the urls
+    res.json(urls);
+  });
+});
+
+router.get('/:short', function(req, res, next) {
+  var id = req.params.short;
+  Url.findOne({short_url: id}, function(err, short) {
+    if(err){ return next(err); }
+    res.redirect(short.original_url);
+  })
 });
 
 module.exports = router;

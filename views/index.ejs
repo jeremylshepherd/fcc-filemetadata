@@ -1,30 +1,41 @@
+<!DOCTYPE html>
 <html>
 
   <head>
 
-    <title>Jeremy L. Shepherd |Timestamp API</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <title>Jeremy L. Shepherd | URL Shortener Microservice API</title>
+    <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
   </head>
   <body>
         <div class="container">
             <h1 class="header">
-                API Basejump: Request Header parser microservice
+                API Basejump: URL Shortener Microservice
             </h1>
             <blockquote>
-                User story:
-                <ul>I can get the IP address, language and operating system for my browser.</ul>
+                User stories:
+                <ul>
+                  <li>
+                     I can pass a URL as a parameter and I will receive a shortened URL in the JSON response.
+                  </li>
+                  <li>
+                    When I visit that shortened URL, it will redirect me to my original link.
+                  </li>
+                </ul>
             </blockquote>
             <h3>Example usage:</h3>
-            <code>https://lit-atoll-7887.herokuapp.com/api/whoami</code><br>
+            <code>https://lit-atoll-7887.herokuapp.com/api/new/http://www.google.com</code><br>
             <h3>Example output:</h3>
             <code>
                 {
-                  "ipaddress": 127.0.0.1,
-                  "language": "en-US",
-                  "software": "Windows NT 6.1; WOW64"
+                  "original_url": 'http://www.google.com',
+                  "short_url": 1459995653860
                 }
             </code>
+            <h3>Usage:</h3>
+            <code>https://lit-atoll-7887.herokuapp.com/1459995653860</code>
+            <h3>Will redirect to:</h3>
+            <code>http://www.google.com/</code>
         </div>
     </body>
 

@@ -3,14 +3,23 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
+var mongoose = require('mongoose');
 
 var app = express();
 
 var routes = require('./routes/index');
 
+/*
+mongoose.connect('mongodb://localhost/urlapp', function(err, db) {
+  if(err) {console.log(err);}
+
+  console.log('Connected to urlapp');
+});
+*/
+
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
