@@ -3,12 +3,6 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var Url = require('../models/urls.js');
 
-mongoose.connect('mongodb://localhost/urlapp', function(err, db) {
-  if(err) {console.log(err);}
-
-  console.log('Connected to urlapp');
-});
-
 function testUrl(url) {
     var urlRE2 = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
     if(!urlRE2.test(url)){
