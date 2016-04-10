@@ -10,7 +10,7 @@ var app = express();
 var routes = require('./routes/index');
 
 /*
-mongoose.connect('mongodb://<dbuser>:<dbpassword>@ds019028.mlab.com:19028/heroku_pdw06x16', function(err, db) {
+mongoose.connect('mongodb://jeremylshepherd:mongolab1@ds019028.mlab.com:19028/heroku_pdw06x16', function(err, db) {
   if(err) {console.log(err);}
 
   console.log('Connected to urlapp');
