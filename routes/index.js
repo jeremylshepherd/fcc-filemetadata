@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
 var Url = require('../models/urls.js');
+var cors = require('cors');
 
 function testUrl(url) {
     var urlRE2 = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
@@ -15,7 +16,7 @@ router.get('/', function(req, res) {
   res.render('index.ejs');
 });
 
-router.get('/api/new/:url*', function(req, res) {
+router.get('/api/new/:url*', cors(), function(req, res) {
   var url = req.url.slice(9)
   if(!testUrl(url)){
     res.render('invalidurl.ejs');
