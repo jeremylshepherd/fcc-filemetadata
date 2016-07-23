@@ -1,60 +1,56 @@
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
+var multer = require('multer');
 var Url = require('../models/urls.js');
-var cors = require('cors');
+var fs =  require('fs');
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, dropExt(file.originalname) + '_' + getFormattedDate() + '.' + getExt(file.originalname))
+  }
+});
 
-function testUrl(url) {
-    var urlRE2 = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
-    if(!urlRE2.test(url)){
-        return false;
-    }
-    return true;
+var upload = multer({ storage: storage });
+
+function dropExt(str) {
+	str = str.split('.');
+	str.pop();
+	str.join('');
+	return str;
+}
+
+function getExt(str) {
+	str = str.split('.');
+	return str.pop();
+}
+
+function getFormattedDate() {
+	var date = new Date(Date.now());
+	var strDate = date.toISOString().slice(0, 10).split('-').join('');
+	var strTime = date.getUTCHours() + "" + date.getMinutes() + "" + date.getSeconds();
+	return strDate + "" + strTime;
 }
 
 router.get('/', function(req, res) {
   res.render('index.ejs');
 });
 
-router.get('/api/new/:url*', cors(), function(req, res) {
-  var url = req.url.slice(9)
-  if(!testUrl(url)){
-    res.render('invalidurl.ejs');
-  }else{
-
-    Url.find({}, function(err, urls) {
-      if (err) throw err;
-      var obj = {};
-      obj.original_url = url;
-      obj.short_url = urls.length + 1;
-      var newUrl = new Url(obj);
-      newUrl.save(function(err, newUrl) {
-        if(err){
-          console.log(err);
-        }else{
-          console.log('Your record has saved.');
-        }
-      });
-      res.json(obj);
-    });
-  }
-});
-
-router.get('/api/results', function(req, res, next) {
-  Url.find({}, function(err, urls) {
-    if (err) throw err;
-
-    // object of all the urls
-    res.json(urls);
+router.get('/files', function(req, res) {
+  fs.readdir('./uploads', function(err, files) {
+  	if(err) {console.log(err);}
+  	var obj = {};
+  	obj.files = files;
+  	res.json(obj);
   });
 });
 
-router.get('/:short', function(req, res, next) {
-  var id = req.params.short;
-  Url.findOne({short_url: id}, function(err, short) {
-    if(err){ return next(err); }
-    res.redirect(short.original_url);
-  })
+router.post('/size', upload.single('size'), function (req, res, next) {
+	var obj = {};
+	obj.size = req.file.size;
+	res.json(obj);
 });
 
 module.exports = router;
