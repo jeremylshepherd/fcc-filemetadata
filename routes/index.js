@@ -1,8 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var mongoose = require('mongoose');
 var multer = require('multer');
-var Url = require('../models/urls.js');
 var fs =  require('fs');
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
