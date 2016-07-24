@@ -10,7 +10,7 @@ var app = express();
 var routes = require('./routes/index');
 
 app.use(logger('dev'));
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
