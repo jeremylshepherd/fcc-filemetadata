@@ -49,6 +49,7 @@ router.post('/size', upload.single('size'), function (req, res, next) {
 	var obj = {};
 	obj.size = req.file.size;
 	res.json(obj);
+	fs.unlink(req.file.path);
 });
 
 module.exports = router;
