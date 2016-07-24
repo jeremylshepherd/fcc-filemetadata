@@ -1,13 +1,11 @@
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
-var logger = require('morgan');
 
 var app = express();
 require('dotenv').load();
 var routes = require('./routes/index');
 
-app.use(logger('dev'));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
