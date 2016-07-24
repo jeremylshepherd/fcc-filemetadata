@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var app = express();
-
+require('dotenv').load();
 var routes = require('./routes/index');
 
 app.use(logger('dev'));
@@ -47,7 +47,7 @@ app.use(function(err, req, res, next) {
   });
 });
 
-var port = process.env.PORT;
+var port = process.env.PORT || 8080;
 app.listen(port,  function () {
 	console.log('Node.js listening on port ' + port + '...');
 });
