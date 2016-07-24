@@ -4,4 +4,4 @@ The user can upload a file and recieve the size of the file returned as a JSON r
 
 Project uses Node, Express, Multer.
 
-("https://filemetadata-jeremylshepherd.herokuapp.com/" "Deployed to Heroku here")
+[Deployed to Heroku here](https://filemetadata-jeremylshepherd.herokuapp.com/)
